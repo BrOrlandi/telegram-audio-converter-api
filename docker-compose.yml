@@ -1,0 +1,22 @@
+version: '3'
+
+networks:
+  traefik:
+    external: true
+
+services:
+  telegram-audio-converter:
+    image: brorlandi/telegram-audio-converter:1.0
+    container_name: telegram-audio-converter
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.telegram-audio-converter.rule=Host(`telegram-audio-converter.brorlandi.duckdns.org`)"
+      - "traefik.http.routers.telegram-audio-converter.entrypoints=web-secure"
+      - "traefik.http.routers.telegram-audio-converter.tls.certresolver=mycertresolver"
+      - "traefik.http.routers.telegram-audio-converter.service=telegram-audio-converter"
+      - "traefik.http.services.telegram-audio-converter.loadbalancer.server.port=3000"
+    ports:
+      - "3000"
+    restart: always
+    networks:
+      - traefik
